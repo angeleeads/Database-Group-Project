@@ -31,7 +31,7 @@
 
 The project uses Knex.js for database migrations. Ensure you have a mySQL database set up. Update the `knexfile.js` configuration file with your database connection details. Modify the `user` and `password` to your own.
 
-!!!Please make sure you have properly have the sql_3rb.sql file in your database before running the project!!!
+⚠️ Please make sure you have properly have the `sql_3rb.sql` file in your database before running the project
 
 1. Run migrations to create the necessary tables:
 
