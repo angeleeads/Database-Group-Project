@@ -1,31 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
+import BestPlayers from './pages/BestPlayers';
+import TeamsPage from './pages/TeamsPage';
 
 function App() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get('http://localhost:3001/api/data');
-        setData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchData();
-  }, []);
-
   return (
-    <div className="App">
-      <h1>Database Content</h1>
-      <ul>
-        {data.map((item) => (
-          <li key={item.id}>{item.name}</li>
-        ))}
-      </ul>
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/best-players" element={<BestPlayers />} />
+        <Route path="/teams" element={<TeamsPage />} />
+      </Routes>
+    </Router>
   );
 }
 

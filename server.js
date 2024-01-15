@@ -14,7 +14,7 @@ const db = knex(knexfile);
 
 app.get('/api/data', async (req, res) => {
   try {
-    const data = await db.select('*').from('teams');
+    const data = await db.select('*').from('leagues');
     res.json(data);
   } catch (error) {
     console.error(error);

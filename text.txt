@@ -1,5 +1,9 @@
 # Football Website Project
 
+## Overview
+
+This project is a web application for football enthusiasts. It uses React for the front end, Express.js for the server, and Knex.js as the SQL query builder. The database is managed using Knex migrations.
+
 ## Getting Started
 
 ### Prerequisites
@@ -107,5 +111,10 @@ To add more queries to the server, you can follow these steps:
 
    Replace `'http://localhost:3001/api/new-query'` with your new endpoint.
 
-## Questions?
-Please feel free to ask me questions if needed this is my whatsapp number +34 660745418 or my email ahalouane23@ku.edu.tr
+## Contributing
+
+Feel free to contribute to the project by submitting issues or pull requests.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
