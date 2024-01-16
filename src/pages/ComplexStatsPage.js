@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const ComplexQueries = () => {
+const ComplexStats = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
         async function fetchData() {
-        try {
-            const response = await axios.get('http://localhost:3001/api/data');
-            setData(response.data);
-        } catch (error) {
-            console.error(error);
+            try {
+                const response = await axios.get('http://localhost:3001/api/data');
+                setData(response.data);
+            } catch (error) {
+                console.error(error);
+            }
         }
-        }
-
         fetchData();
     }, []);
 
@@ -30,4 +29,4 @@ const ComplexQueries = () => {
   );
 };
 
-export default ComplexQueries;
+export default ComplexStats;

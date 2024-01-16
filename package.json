@@ -19,6 +19,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "dev": "node src/database/server.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

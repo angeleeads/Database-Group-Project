@@ -1,7 +1,5 @@
 # Football Website Project
 
-## Getting Started
-
 ### Prerequisites
 
 - Node.js installed (version 14.x recommended)
@@ -29,24 +27,17 @@
 
 ### Database Migration
 
-The project uses Knex.js for database migrations. Ensure you have a mySQL database set up. Update the `knexfile.js` configuration file with your database connection details. Modify the `user` and `password` to your own.
+The project uses Knex.js for database migrations. Ensure you have a MySQL database set up. Update the `knexfile.js` configuration file with your database connection details. Modify the `user` and `password` to your own.
 
-⚠️ Please make sure you have properly have the `sql_3rb.sql` file in your database before running the project
-
-1. Run migrations to create the necessary tables:
-
-    ```bash
-    npm run migrate:latest
-    ```
-
-    This will apply any pending migrations and set up the database.
+⚠️ Please make sure you have properly have the `sql_3rb` database before running the project.
+The database file is `src/database/3rb-combined.sql` and you can import it to your database.
 
 ### Running the Application
 
 1. Start the server:
 
     ```bash
-    node server.js
+    node src/database/server.js
     ```
 
     The server will run on http://localhost:3001.
@@ -84,7 +75,7 @@ To add more queries to the server, you can follow these steps:
 3. Restart the server to apply the changes.
 
     ```bash
-    npm start
+    node src/database/server.js
     ```
 
 4. Update your React components to fetch data from the new endpoint.
@@ -98,6 +89,13 @@ To add more queries to the server, you can follow these steps:
             setNewData(response.data);
          } catch (error) {
             console.error(error);
+
+## Added Queries
+### [ GET ] : `/api/top-scorers`
+### [ GET ] : `/api/top-assists`
+### [ GET ] : `/api/top-cs`
+### [ GET ] : `/api/top-performance`
+
 
 ## Questions?
 Please feel free to ask me questions if needed this is my whatsapp number +34 660745418 or my email ahalouane23@ku.edu.tr
