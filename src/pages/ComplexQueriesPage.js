@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const HomePage = () => {
+const ComplexQueries = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -30,4 +30,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default ComplexQueries;

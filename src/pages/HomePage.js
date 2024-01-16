@@ -1,31 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// src/components/HomePage.js
+
+import React from 'react';
+import AboutCard from '../components/Home/AboutCards';
+import PlayersCards from '../components/Home/PlayersCards';
 
 const HomePage = () => {
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        async function fetchData() {
-        try {
-            const response = await axios.get('http://localhost:3001/api/data');
-            setData(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-        }
-
-        fetchData();
-    }, []);
-
   return (
-    <div className="container mx-auto mt-8">
-        <h1 className="text-2xl font-bold mb-4">Welcome to the Football Website!</h1>
-        <p className="text-gray-600">Discover the best football activities...</p>
-        <ul>
-            {data.map((item, index) => (
-                <li key={item.id || index}>{item.name}</li>
-            ))}
-        </ul>
+    <div className="bg-gray-900 text-white min-h-screen">
+      {/* Hero Section */}
+      <section className="flex items-center justify-center h-screen bg-cover bg-center relative" style={{ backgroundImage: 'url("https://i.pinimg.com/originals/dd/b1/87/ddb18728a2772d3228ecaa8e83aa3c63.jpg")' }}>
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="text-center z-10">
+          <h1 className="text-6xl font-bold mb-4">Welcome to our website</h1>
+          <p className="text-lg mb-8">Discover the best football activities...</p>
+          <button className="bg-blue-500 text-white px-6 py-2 rounded-full">Get Started</button>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section className="container mx-auto my-16">
+        <h2 className="text-3xl font-bold mb-8">About Us</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <AboutCard path="/best-team" image_url="https://i.pinimg.com/originals/f1/15/33/f1153345cb7aa9503c9528e2f3bb1ca3.jpg" alt_text="simple pic" title="Simple queries" text="Description for simple queries"/>
+          <AboutCard path="/best-team" image_url="https://i.pinimg.com/originals/a8/c3/38/a8c33859d466baaf1711a8c478f999e1.jpg" alt_text="complex pic" title="Complex queries" text="Description for complex queries"/>
+        </div>
+      </section>
+
+      {/* Featured Players Section */}
+      <section className="bg-gray-800 text-white py-16">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">Featured Players</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <PlayersCards image_url="https://i.pinimg.com/originals/d9/b0/66/d9b06688a2099a7ab6303233b2760e74.jpg" player_name="Alejo Veliz" club="Tottenham"/>
+            <PlayersCards image_url="https://i.pinimg.com/originals/49/19/84/4919849afdf9e1f9ad13c5899d774891.jpg" player_name="Joel Matip" club="Liverpool"/>
+            <PlayersCards image_url="https://i.pinimg.com/originals/0b/17/c9/0b17c93a60fa0912c120088d59a9afce.jpg" player_name="Alexia Putellas" club="FC Barcelona"/>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="container mx-auto my-16">
+        <h2 className="text-3xl font-bold mb-8">Contact Us</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div>
+            <p className="text-lg mb-4">Have questions or suggestions? Contact us!</p>
+            <p className="text-lg">Email: info@footballwebsite.com</p>
+          </div>
+          <div className="hidden lg:block">
+            <img src="/images/contact-us.jpg" alt="Contact Us" className="rounded-lg shadow-md" />
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

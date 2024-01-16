@@ -36,8 +36,8 @@ const Navbar = () => {
 
                 <div className={`lg:flex ${isOpen ? 'mt-4 flex flex-col' : 'hidden'} lg:mt-0 lg:ml-4 pr-3`}>
                     <div className={`lg:block lg:mt-0 lg:ml-4 pr-3`}>
-                        <Link to="/best-players" className="text-xl font-bold pr-4">Best Players</Link>
-                        <Link to="/teams" className="text-xl font-bold pr-4">Best Teams</Link>
+                        <Link to="/simple-queries" className="text-xl font-bold pr-4">Simple Queries</Link>
+                        <Link to="/complex-queries" className="text-xl font-bold pr-4">Complex Queries</Link>
                     </div>
                 </div>
             </div>

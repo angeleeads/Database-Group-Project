@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
-import BestPlayers from './pages/BestPlayers';
-import TeamsPage from './pages/TeamsPage';
+import SimpleQueries from './pages/SimpleQueriesPage';
+import ComplexQueries from './pages/ComplexQueriesPage';
 
 function App() {
   return (
@@ -11,8 +11,8 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/best-players" element={<BestPlayers />} />
-        <Route path="/teams" element={<TeamsPage />} />
+        <Route path="/simple-queries" element={<SimpleQueries />} />
+        <Route path="/complex-queries" element={<ComplexQueries />} />
       </Routes>
     </Router>
   );
