@@ -95,7 +95,3 @@ To add more queries to the server, you can follow these steps:
 ### [ GET ] : `/api/top-assists`
 ### [ GET ] : `/api/top-cs`
 ### [ GET ] : `/api/top-performance`
-
-
-## Questions?
-Please feel free to ask me questions if needed this is my whatsapp number +34 660745418 or my email ahalouane23@ku.edu.tr
