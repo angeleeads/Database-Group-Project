@@ -128,19 +128,6 @@ app.get('/api/top-performance', async (req, res) => {
   }
 });
 
-app.post('/api/add-player', async (req, res) => {
-  try {
-    const { playerName, teamName, position } = req.body;
-
-    await db('players').insert({ name: playerName, team: teamName, position });
-
-    res.status(200).json({ message: 'Player added successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 app.listen(PORT, () => {
   console.log(`You are launching the server`);
   console.log(`Server is running on http://localhost:${PORT}`);

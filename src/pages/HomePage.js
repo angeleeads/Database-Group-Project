@@ -28,11 +28,11 @@ const HomePage = () => {
       {/* Featured Players Section */}
       <section className="bg-gray-800 text-white py-16">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8">Featured Players</h2>
+          <h2 className="text-3xl font-bold mb-8">Featured Drafters</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <PlayersCards image_url="https://i.pinimg.com/originals/d9/b0/66/d9b06688a2099a7ab6303233b2760e74.jpg" player_name="Alejo Veliz" club="Tottenham"/>
-            <PlayersCards image_url="https://i.pinimg.com/originals/49/19/84/4919849afdf9e1f9ad13c5899d774891.jpg" player_name="Joel Matip" club="Liverpool"/>
-            <PlayersCards image_url="https://i.pinimg.com/originals/0b/17/c9/0b17c93a60fa0912c120088d59a9afce.jpg" player_name="Alexia Putellas" club="FC Barcelona"/>
+            <PlayersCards image_url="https://img-s1.onedio.com/id-6226186bde2e607f131464d3/rev-0/w-600/h-600/f-jpg/s-098d0da28937f34cba74ba5246f951c0a44ecd06.jpg" player_name="Ugur"/>
+            <PlayersCards image_url="https://yt3.googleusercontent.com/3j6Lwn5i8CF5f51fXV84uYo_Q_AMRJxmhMcLEUgiATtg0y78tGxRlYJsx7gLkOUjsQExRDfEGmc=s176-c-k-c0x00ffffff-no-rj" player_name="Arden"/>
+            <PlayersCards image_url="https://pbs.twimg.com/profile_images/1564676322080788480/1tDCSJB-_400x400.jpg" player_name="Onur"/>
           </div>
         </div>
       </section>

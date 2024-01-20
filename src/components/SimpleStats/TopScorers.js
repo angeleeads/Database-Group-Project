@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const TopScorers = () => {
   const [topScorers, setTopScorers] = useState([]);
-  const [showCards, setShowCards] = useState(false);
+  const [showCards, setShowCards] = useState(true);
 
   useEffect(() => {
     async function fetchTopScorers() {

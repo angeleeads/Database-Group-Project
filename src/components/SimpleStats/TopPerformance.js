@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const TopPerformance = () => {
   const [topPerformance, setTopPerformance] = useState(null);
-  const [showCards, setShowCards] = useState(false);
+  const [showCards, setShowCards] = useState(true);
 
   useEffect(() => {
     const fetchTopPerformance = async () => {
