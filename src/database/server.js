@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const knex = require('knex');
 const knexfile = require('./knexfile');
+const router = express.Router();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -11,6 +12,16 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const db = knex(knexfile);
+
+app.get('/api/players-data', async (req, res) => {
+  try {
+    const data = await db.select('*').from('players');
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 app.get('/api/data', async (req, res) => {
   try {
@@ -125,6 +136,49 @@ app.get('/api/top-performance', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/player-names', async (req, res) => {
+  try {
+    const playerNames = await db.select('name').from('players');
+    res.json(playerNames.map((row) => row.name));
+  } catch (error) {
+    console.error('Error fetching player names:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/team-names', async (req, res) => {
+  try {
+    const teamNames = await db.distinct('team').from('players');
+    res.json(teamNames.map((row) => row.team));
+  } catch (error) {
+    console.error('Error fetching team names:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/positions', async (req, res) => {
+  try {
+    const positions = await db.distinct('position').from('players');
+    res.json(positions.map((row) => row.position));
+  } catch (error) {
+    console.error('Error fetching positions:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/api/add-players', async (req, res) => {
+  try {
+    const { name, position, team } = req.body;
+
+    await db('players').insert({ name, position, team });
+    console.log(name, position, team);
+    res.status(201).json({ message: 'Player added successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Oups! Internal server error' });
   }
 });
 
