@@ -13,6 +13,8 @@ app.use(bodyParser.json());
 
 const db = knex(knexfile);
 
+let playersData = [];
+
 app.get('/api/players-data', async (req, res) => {
   try {
     const data = await db.select('*').from('players');
@@ -179,6 +181,34 @@ app.post('/api/add-players', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Oups! Internal server error' });
+  }
+});
+
+app.delete('/api/delete-player', (req, res) => {
+  try {
+      const { name, team, position } = req.body;
+
+      // Find the player in the array based on unique properties
+      const playerIndex = playersData.findIndex(player =>
+          player.name === name && player.team === team && player.position === position
+      );
+
+      if (playerIndex !== -1) {
+          // Remove the player from the array
+          playersData.splice(playerIndex, 1);
+
+          // Send a success response
+          res.json({ success: true, message: 'Player deleted successfully' });
+      } else {
+          // Player not found, send an error response
+          res.status(404).json({ success: false, message: 'Player not found' });
+      }
+  } catch (error) {
+      // Log the error for debugging purposes
+      console.error('Error in delete-player route:', error);
+
+      // Send an internal server error response
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 
