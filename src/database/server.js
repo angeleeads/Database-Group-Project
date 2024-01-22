@@ -72,6 +72,7 @@ app.get('/api/top-assists', async (req, res) => {
       .select(
         'player_stats.player_name',
         'player_stats.drafter_name',
+        'player_stats.video_id',
         'player_stats.Total_Assist',
         'players.photo',
         'players.team',

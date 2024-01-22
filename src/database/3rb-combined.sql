@@ -1744,3 +1744,23 @@ DROP PRIMARY KEY;
 ALTER TABLE `player_stats`
 ADD PRIMARY KEY (`player_name`, `team`, `video_id`, `drafter_name`);
 
+-- Step 5: Add players' photos
+UPDATE players SET photo = 'https://i.pinimg.com/originals/17/95/04/17950444b168ebfe87bc8acffdcbc581.jpg' WHERE name = 'Kylian Mbappe';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/1f/25/1b/1f251ba94cb82db8bb508139ebd37ec0.jpg' WHERE name = 'Harry kane';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/eb/65/42/eb6542dbe0bf20557db99b0727bbe54d.jpg' WHERE name = 'Khephren Thuram';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/3e/d0/49/3ed049feac772d46708dab64e4b61efc.jpg' WHERE name = 'Joao Cancelo';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/3a/fb/5a/3afb5aa4f388c5d83f660a52054b4667.jpg' WHERE name = 'Mehdi Taremi';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/d1/42/e3/d142e3eed296a0058da296938369d3f7.jpg' WHERE name = 'Joao Felix';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/31/d7/76/31d7763dad8611197f2559db5090df3c.jpg' WHERE name = 'Kevin De Bruyne';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/eb/26/15/eb261586d5134662d4c27ddfa31b9796.jpg' WHERE name = 'Enzo Fernandez';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/a2/49/61/a249616b8d8e747e66304e013aa9fc93.jpg' WHERE name = 'Jordan Pickford';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/44/ea/60/44ea600a1e33162cac7ecc2efe0aec00.jpg' WHERE name = 'Heung-min Son';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/ad/68/bc/ad68bcd9ce54b229a68f89c96468d71e.jpg' WHERE name = 'Pau Torres';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/50/47/80/504780c45829196f5e6184938ae09d43.png' WHERE name = 'Victor Osimhen';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/50/47/80/504780c45829196f5e6184938ae09d43.png' WHERE name = 'Zeki Çelik';
+UPDATE players SET photo = 'https://icdn.tgrthaber.com.tr/crop/1600x900/images/haberler/23-09/10/almusrati.jpg' WHERE name = 'Al-Musrati';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/45/67/ef/4567efb4b897eaf1964c14a044982ad3.jpg' WHERE name = 'Alberto Moleiro';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/0c/64/57/0c64571c1f2b05b0616f38665ff0d1e1.jpg' WHERE name = 'Randal Kolo Muani';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/46/fc/b3/46fcb38f08ab8754e529e22b3a695d59.jpg' WHERE name = 'Achraf Hakimi';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/0c/cf/25/0ccf25c61cbfda8ab4664afec4ddee1e.jpg' WHERE name = 'Robert Lewandowski';
+UPDATE players SET photo = 'https://assets-fr.imgfoot.com/media/cache/1200x1200/alejandro-grimaldo-2324.jpg' WHERE name = 'Alejandro Grimaldo';

@@ -73,7 +73,7 @@ const PlayerForm = () => {
     return (
         <div>
             <form
-                className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                className="bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4"
                 onSubmit={handleAddPlayer}>
                 <div className="flex flex-center mb-5 mt-5">
                     {error && <p className="text-white bg-red-400 font-bold rounded-md pl-3 pr-3">{error}</p>}
@@ -81,11 +81,11 @@ const PlayerForm = () => {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                    <label className="block text-gray-200 text-sm font-bold mb-2" htmlFor="name">
                         Player's Name
                     </label>
                     <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-200 leading-tight focus:outline-none focus:shadow-outline"
                         id="name"
                         type="text"
                         placeholder="Enter player's name"
@@ -100,11 +100,11 @@ const PlayerForm = () => {
                     </datalist>
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="team">
+                    <label className="block text-gray-200 text-sm font-bold mb-2" htmlFor="team">
                         Player's Team
                     </label>
                     <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-200 leading-tight focus:outline-none focus:shadow-outline"
                         id="team"
                         type="text"
                         placeholder="Enter player's team"
@@ -119,11 +119,11 @@ const PlayerForm = () => {
                     </datalist>
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="position">
+                    <label className="block text-gray-200 text-sm font-bold mb-2" htmlFor="position">
                         Player's Position
                     </label>
                     <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-200 leading-tight focus:outline-none focus:shadow-outline"
                         id="position"
                         type="text"
                         placeholder="Enter player's position"
@@ -139,7 +139,7 @@ const PlayerForm = () => {
                 </div>
                 <div className="flex items-center justify-between">
                     <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-gray-500 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="submit">
                         Add Player
                     </button>

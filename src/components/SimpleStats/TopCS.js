@@ -28,7 +28,7 @@ const TopCS = () => {
 
   return (
     <div className="mb-8">
-      <h2 className="text-3xl font-bold mb-4 flex items-center text-gray-800" onClick={toggleCards}>
+      <h2 className="text-3xl font-bold mb-4 flex items-center text-gray-200" onClick={toggleCards}>
         Top 5 CS
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M10 14.586L3.707 8.293a1 1 0 011.414-1.414L10 11.586l4.879-4.879a1 1 0 111.414 1.414L10 14.586z" clipRule="evenodd" />
@@ -40,14 +40,16 @@ const TopCS = () => {
             <div key={index} onClick={() => handleCardClick(player.url)} className="bg-white p-4 rounded-md shadow-md transform hover:scale-105 transition-transform">
               <img
                 src={player.photo}
-                alt={`Drafter ${player.drafter_name}`}
+                alt={`Drafter ${player.player_name}`}
                 className="w-full h-96 object-cover rounded-md mb-4"
               />
-              <p className="text-xl font-semibold">{player.player_name}</p>
-              <p>Total CS: {player.Total_CS}</p>
-              <p>Drafted by: {player.drafter_name}</p>
-              <p>Player's team: {player.team}</p>
-              <p>Video ID: {player.video_id}</p>
+              <div className="text-center">
+                <p className="text-xl font-semibold">{player.player_name}</p>
+                <p className="text-gray-600">Total CS: {player.Total_CS}</p>
+                <p className="text-gray-600">Drafted by: {player.drafter_name}</p>
+                <p className="text-gray-600">Player's team: {player.team}</p>
+                <p className="text-gray-600">Video ID: {player.video_id}</p>
+              </div>
             </div>
           ))}
         </div>

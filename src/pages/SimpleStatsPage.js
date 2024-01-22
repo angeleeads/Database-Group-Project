@@ -7,8 +7,8 @@ import TopPerformance from '../components/SimpleStats/TopPerformance';
 const SimpleStats = () => {
 
   return (
-    <div>
-      <h2 className="text-3xl font-bold text-gray-900 text-center mb-9">List of Simple Stats</h2>
+    <div className="bg-gray-700">
+      <h2 className="text-3xl font-bold text-gray-200 text-center mb-9">List of Simple Stats</h2>
       <ul>
         <TopScorers />
         <TopAssists />
