@@ -101,32 +101,19 @@ app.get('/api/top-cs', async (req, res) => {
   try {
     const topCS = await db
       .select(
-        'player_stats.player_name',
-        'player_stats.drafter_name',
-        'player_stats.video_id',
-        'player_stats.Total_CS',
-        'players.photo',
-        'players.team',
-        'draft_info.url'
+        'ps.player_name',
+        'ps.drafter_name',
+        'ps.video_id',
+        'ps.Total_CS'
       )
-      .from('player_stats')
-      .leftJoin('draft_info', 'player_stats.video_id', 'draft_info.video_id')
-      .leftJoin('players', 'player_stats.player_name', 'players.name')
-      .whereNotNull('player_stats.Total_CS')
-      .orderBy('player_stats.Total_CS', 'desc')
+      .from('player_stats as ps')
+      .join('players as p', 'ps.player_name', 'p.name')
+      .where('p.position', 'GK')
+      .whereNotNull('ps.Total_CS')
+      .orderBy('ps.Total_CS', 'desc')
       .limit(5);
 
-    const formattedTopCS = topCS.map(player => ({
-      player_name: player.player_name,
-      drafter_name: player.drafter_name,
-      video_id: player.video_id,
-      Total_CS: player.Total_CS,
-      photo: player.photo,
-      team: player.team,
-      url: player.url || 'https://www.youtube.com/watch?v=GaE-L5zP-DE',
-    }));
-
-    res.json(formattedTopCS);
+    res.json(topCS);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -170,25 +157,25 @@ app.get('/api/top-players-onur', async (req, res) => {
         'player_stats.player_name',
         'player_stats.drafter_name',
         'players.photo',
-        'players.team'
+        'players.team',
       )
-      .sum({ 'Total_Points': 'player_stats.Goal_King' })
-      .sum({ 'Total_Points': 'player_stats.Assist_King' })
-      .sum({ 'Total_Points': 'player_stats.CS_King' })
-      .sum({ 'Total_Points': 'player_stats.EU_Goal_King' })
-      .sum({ 'Total_Points': 'player_stats.EU_Assist_King' })
-      .sum({ 'Total_Points': 'player_stats.EU_CS_King' })
-      .sum({ 'Total_Points': 'player_stats.3RB_Goal_King' })
-      .sum({ 'Total_Points': 'player_stats.3RB_Assist_King' })
-      .sum({ 'Total_Points': 'player_stats.3RB_CS_King' })
-      .sum({ 'Total_Points': 'player_stats.Best_Performance' })
-      .sum({ 'Total_Points': 'player_stats.Best_Best_Performance' })
-      .sum({ 'Total_Points': 'player_stats.Performance_king' })
-      .sum({ 'Total_Points': 'player_stats.Other_Point' })
+      .select(db.raw(`
+        SUM(Goal_King + Assist_King + CS_King +
+            EU_Goal_King + EU_Assist_King + EU_CS_King +
+            3RB_Goal_King + 3RB_Assist_King + 3RB_CS_King +
+            Best_Performance + Best_Best_Performance + Performance_king +
+            Other_Point
+        ) AS Total_Points
+      `))
       .from('player_stats')
       .leftJoin('players', 'player_stats.player_name', 'players.name')
       .where('player_stats.drafter_name', '=', 'Onur')
-      .groupBy('player_stats.player_name', 'player_stats.drafter_name', 'players.photo', 'players.team')
+      .groupBy(
+        'player_stats.player_name',
+        'player_stats.drafter_name',
+        'players.photo',
+        'players.team'
+      )
       .orderBy('Total_Points', 'desc')
       .limit(5);
 
@@ -207,38 +194,37 @@ app.get('/api/top-players-onur', async (req, res) => {
   }
 });
 
-
 // Get top players arden
 app.get('/api/top-players-arden', async (req, res) => {
   try {
-    const topPlayersArden = await db
+    const topPlayers = await db
       .select(
+        'player_stats.player_name',
+        'player_stats.drafter_name',
+        'players.photo',
+        'players.team',
+      )
+      .select(db.raw(`
+        SUM(Goal_King + Assist_King + CS_King +
+            EU_Goal_King + EU_Assist_King + EU_CS_King +
+            3RB_Goal_King + 3RB_Assist_King + 3RB_CS_King +
+            Best_Performance + Best_Best_Performance + Performance_king +
+            Other_Point
+        ) AS Total_Points
+      `))
+      .from('player_stats')
+      .leftJoin('players', 'player_stats.player_name', 'players.name')
+      .where('player_stats.drafter_name', '=', 'Arden')
+      .groupBy(
         'player_stats.player_name',
         'player_stats.drafter_name',
         'players.photo',
         'players.team'
       )
-      .sum({ 'Total_Points': 'player_stats.Goal_King' })
-      .sum({ 'Total_Points': 'player_stats.Assist_King' })
-      .sum({ 'Total_Points': 'player_stats.CS_King' })
-      .sum({ 'Total_Points': 'player_stats.EU_Goal_King' })
-      .sum({ 'Total_Points': 'player_stats.EU_Assist_King' })
-      .sum({ 'Total_Points': 'player_stats.EU_CS_King' })
-      .sum({ 'Total_Points': 'player_stats.3RB_Goal_King' })
-      .sum({ 'Total_Points': 'player_stats.3RB_Assist_King' })
-      .sum({ 'Total_Points': 'player_stats.3RB_CS_King' })
-      .sum({ 'Total_Points': 'player_stats.Best_Performance' })
-      .sum({ 'Total_Points': 'player_stats.Best_Best_Performance' })
-      .sum({ 'Total_Points': 'player_stats.Performance_king' })
-      .sum({ 'Total_Points': 'player_stats.Other_Point' })
-      .from('player_stats')
-      .leftJoin('players', 'player_stats.player_name', 'players.name')
-      .where('player_stats.drafter_name', '=', 'Arden')
-      .groupBy('player_stats.player_name', 'player_stats.drafter_name', 'players.photo', 'players.team')
       .orderBy('Total_Points', 'desc')
       .limit(5);
 
-    const formattedTopPlayersArden = topPlayersArden.map(player => ({
+    const formattedTopPlayers = topPlayers.map(player => ({
       player_name: player.player_name,
       drafter_name: player.drafter_name,
       photo: player.photo,
@@ -246,7 +232,7 @@ app.get('/api/top-players-arden', async (req, res) => {
       Total_Points: player.Total_Points,
     }));
 
-    res.json(formattedTopPlayersArden);
+    res.json(formattedTopPlayers);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -256,42 +242,98 @@ app.get('/api/top-players-arden', async (req, res) => {
 // Get top players ugur
 app.get('/api/top-players-ugur', async (req, res) => {
   try {
-    const topPlayersArden = await db
+    const topPlayers = await db
       .select(
+        'player_stats.player_name',
+        'player_stats.drafter_name',
+        'players.photo',
+        'players.team',
+      )
+      .select(db.raw(`
+        SUM(Goal_King + Assist_King + CS_King +
+            EU_Goal_King + EU_Assist_King + EU_CS_King +
+            3RB_Goal_King + 3RB_Assist_King + 3RB_CS_King +
+            Best_Performance + Best_Best_Performance + Performance_king +
+            Other_Point
+        ) AS Total_Points
+      `))
+      .from('player_stats')
+      .leftJoin('players', 'player_stats.player_name', 'players.name')
+      .where('player_stats.drafter_name', '=', 'Onur')
+      .groupBy(
         'player_stats.player_name',
         'player_stats.drafter_name',
         'players.photo',
         'players.team'
       )
-      .sum({ 'Total_Points': 'player_stats.Goal_King' })
-      .sum({ 'Total_Points': 'player_stats.Assist_King' })
-      .sum({ 'Total_Points': 'player_stats.CS_King' })
-      .sum({ 'Total_Points': 'player_stats.EU_Goal_King' })
-      .sum({ 'Total_Points': 'player_stats.EU_Assist_King' })
-      .sum({ 'Total_Points': 'player_stats.EU_CS_King' })
-      .sum({ 'Total_Points': 'player_stats.3RB_Goal_King' })
-      .sum({ 'Total_Points': 'player_stats.3RB_Assist_King' })
-      .sum({ 'Total_Points': 'player_stats.3RB_CS_King' })
-      .sum({ 'Total_Points': 'player_stats.Best_Performance' })
-      .sum({ 'Total_Points': 'player_stats.Best_Best_Performance' })
-      .sum({ 'Total_Points': 'player_stats.Performance_king' })
-      .sum({ 'Total_Points': 'player_stats.Other_Point' })
-      .from('player_stats')
-      .leftJoin('players', 'player_stats.player_name', 'players.name')
-      .where('player_stats.drafter_name', '=', 'Ugur')
-      .groupBy('player_stats.player_name', 'player_stats.drafter_name', 'players.photo', 'players.team')
       .orderBy('Total_Points', 'desc')
       .limit(5);
 
-    const formattedTopPlayersArden = topPlayersArden.map(player => ({
+    const formattedTopPlayers = topPlayers.map(player => ({
       player_name: player.player_name,
       drafter_name: player.drafter_name,
-      Total_Points: player.Total_Points,
       photo: player.photo,
       team: player.team,
+      Total_Points: player.Total_Points,
     }));
 
-    res.json(formattedTopPlayersArden);
+    res.json(formattedTopPlayers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/search', async (req, res) => {
+  try {
+    const { type, value } = req.query;
+
+    let query;
+    switch (type) {
+      case 'player_name':
+        query = await db
+          .select('*')
+          .from('player_stats')
+          .where('player_name', 'like', `%${value}%`);
+        break;
+      case 'team':
+        query = await db
+          .select('*')
+          .from('player_stats')
+          .where('team', 'like', `%${value}%`);
+        break;
+      case 'video_id':
+        const videoId = parseInt(value);
+        if (isNaN(videoId) || videoId < 1 || videoId > 9) {
+          res.status(400).json({ error: 'Invalid video_id' });
+          return;
+        }
+        query = await db
+          .select('*')
+          .from('player_stats')
+          .where('video_id', '=', videoId);
+        break;
+      case 'drafter_name':
+        const drafterExists = await db
+          .select('drafter_name')
+          .from('player_stats')
+          .where('drafter_name', '=', value)
+          .first();
+        if (!drafterExists) {
+          res.status(400).json({ error: 'Drafter does not exist' });
+          return;
+        }
+        query = await db
+          .select('*')
+          .from('player_stats')
+          .where('drafter_name', '=', value);
+        break;
+      default:
+        res.status(400).json({ error: 'Invalid search type' });
+        return;
+    }
+
+    res.json(query);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });

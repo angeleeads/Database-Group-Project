@@ -1,4 +1,4 @@
-# Football Website Project
+# EA FC 24 Stats
 
 ### Prerequisites
 

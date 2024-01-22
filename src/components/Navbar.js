@@ -11,9 +11,12 @@ const Navbar = () => {
     return (
         <nav className="bg-gray-800 p-4 text-white">
             <div className="container mx-auto flex justify-between items-center">
-                <Link to="/" className={`text-xl font-bold ${isOpen ? 'lg:mb-0' : 'lg:mb-0 mb-4'}`}>
-                    Football Website
-                </Link>
+                <div className="flex items-center">
+                    <img src="logo.png" alt="EA FC 24 Stats logo" className="pr-3"/>
+                    <Link to="/" className={`text-2xl font-bold ${isOpen ? 'lg:mb-0' : 'lg:mb-0 mb-4'}`}>
+                        EA FC 24 Stats
+                    </Link>
+                </div>
 
                 <div className="lg:hidden">
                     <button onClick={toggleMenu} className="text-white focus:outline-none">
@@ -39,6 +42,7 @@ const Navbar = () => {
                         <Link to="/simple-stats" className="text-xl font-bold pr-4 hover:underline">Simple Stats</Link>
                         <Link to="/complex-stats" className="text-xl font-bold pr-4 hover:underline">Complex Stats</Link>
                         <Link to="/add-players" className="text-xl font-bold pr-4 hover:underline">Players</Link>
+                        <Link to="/search" className="text-xl font-bold pr-4 hover:underline">Search</Link>
                     </div>
                 </div>
             </div>

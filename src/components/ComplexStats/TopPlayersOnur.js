@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const TopPlayersOnur = () => {
   const [topPlayers, setTopPlayers] = useState([]);
-  const [showCards, setShowCards] = useState(false);
+  const [showCards, setShowCards] = useState(true);
 
   useEffect(() => {
     async function fetchTopPlayers() {
@@ -39,7 +39,11 @@ const TopPlayersOnur = () => {
               alt={`Drafter ${player.drafter_name}`}
               className="w-full h-96 object-cover rounded-md mb-4"
             />
-            <p className="text-xl font-semibold">{player.player_name}</p>
+            <div className="text-center">
+              <p className="text-xl font-semibold">{player.player_name}</p>
+              <p className="text-gray-600">Team: {player.team}</p>
+              <p className="text-gray-600">Total points: {player.Total_Points}</p>
+            </div>
           </div>
         ))}
       </div>
