@@ -8,6 +8,7 @@ const PlayerList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [players, setPlayers] = useState([]);
     const [perPage] = useState(30);
+    const [successMessage, setSuccessMessage] = useState('');
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -27,14 +28,18 @@ const PlayerList = () => {
             await axios.delete('http://localhost:3001/api/delete-player', {
                 params: player
             });
-            const updatedPlayers = players.filter(p =>
+            const updatedPlayers = playersData.filter(p =>
                 !(p.name === player.name && p.team === player.team && p.position === player.position)
             );
             setPlayers(updatedPlayers);
+            setSuccessMessage('Player deleted successfully');
+            setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
             setError('Error deleting player: ' + error.message);
+            setTimeout(() => setError(''), 3000);
         }
     };
+    
     const indexOfLastPlayer = currentPage * perPage;
     const indexOfFirstPlayer = indexOfLastPlayer - perPage;
     const currentPlayers = playersData.slice(indexOfFirstPlayer, indexOfLastPlayer);
@@ -43,7 +48,8 @@ const PlayerList = () => {
     return (
         <div className="flex flex-col items-center">
                 <h2 className="text-xl font-bold mb-4">List of Players</h2>
-                {error && <p className="text-white bg-red-400 text-xl font-bold w-64 text-center">{error}</p>}
+                {error && <p className="text-white bg-red-400 text-xl font-bold text-center">{error}</p>}
+                {successMessage && <p className="text-white bg-green-400 text-xl font-bold text-center">{successMessage}</p>}
                 {currentPlayers.length > 0 ? (
                     <div className="grid grid-cols-5 gap-4">
                         {currentPlayers.map((player, index) => (

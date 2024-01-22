@@ -8,6 +8,7 @@ const PlayerForm = () => {
     const [nameSuggestions, setNameSuggestions] = useState([]);
     const [teamSuggestions, setTeamSuggestions] = useState([]);
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [positionSuggestions, setPositionSuggestions] = useState([]);
 
     useEffect(() => {
@@ -42,9 +43,15 @@ const PlayerForm = () => {
         try {
             if (!name || !team || !position) {
                 setError('Please fill in all fields');
+                setTimeout(() => setError(''), 3000);
                 return;
             } if (nameSuggestions.includes(name)) {
                 setError('Player name already exists');
+                setTimeout(() => setError(''), 3000);
+                return;
+            } if (!positionSuggestions.includes(position)) {
+                setError('This position is not valid');
+                setTimeout(() => setError(''), 3000);
                 return;
             }
             await fetch('http://localhost:3001/api/add-players', {
@@ -55,10 +62,12 @@ const PlayerForm = () => {
                 body: JSON.stringify({ name, team, position }),
                 
             });
-            console.log(name, position, team);
             setPlayers([...players, { name, team, position }]);
+            setSuccessMessage('Player added successfully');
+            setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
             setError('Error adding player: ' + error.message);
+            setTimeout(() => setError(''), 3000);
         }
     };
     return (
@@ -68,6 +77,7 @@ const PlayerForm = () => {
                 onSubmit={handleAddPlayer}>
                 <div className="flex flex-center mb-5 mt-5">
                     {error && <p className="text-white bg-red-400 font-bold rounded-md pl-3 pr-3">{error}</p>}
+                    {successMessage && <p className="text-white bg-green-400 font-bold rounded-md pl-3 pr-3">{successMessage}</p>}
                 </div>
 
                 <div className="mb-4">

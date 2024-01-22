@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const knex = require('knex');
 const knexfile = require('./knexfile');
-const router = express.Router();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,8 +12,7 @@ app.use(bodyParser.json());
 
 const db = knex(knexfile);
 
-let playersData = [];
-
+// Get all players data
 app.get('/api/players-data', async (req, res) => {
   try {
     const data = await db.select('*').from('players');
@@ -25,6 +23,7 @@ app.get('/api/players-data', async (req, res) => {
   }
 });
 
+// Get all leagues data
 app.get('/api/data', async (req, res) => {
   try {
     const data = await db.select('*').from('leagues');
@@ -35,7 +34,7 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
-//Simple Stats
+// Get top scorers
 app.get('/api/top-scorers', async (req, res) => {
   try {
     const topScorers = await db
@@ -44,10 +43,13 @@ app.get('/api/top-scorers', async (req, res) => {
         'player_stats.drafter_name',
         'player_stats.video_id',
         'player_stats.Total_Goal',
+        'players.photo',
+        'players.team',
         'draft_info.url'
       )
       .from('player_stats')
       .leftJoin('draft_info', 'player_stats.video_id', 'draft_info.video_id')
+      .leftJoin('players', 'player_stats.player_name', 'players.name')
       .orderBy('player_stats.Total_Goal', 'desc')
       .limit(5);
 
@@ -63,6 +65,7 @@ app.get('/api/top-scorers', async (req, res) => {
   }
 });
 
+// Get top assists
 app.get('/api/top-assists', async (req, res) => {
   try {
     const topAssists = await db
@@ -70,10 +73,13 @@ app.get('/api/top-assists', async (req, res) => {
         'player_stats.player_name',
         'player_stats.drafter_name',
         'player_stats.Total_Assist',
+        'players.photo',
+        'players.team',
         'draft_info.url'
       )
       .from('player_stats')
       .leftJoin('draft_info', 'player_stats.video_id', 'draft_info.video_id')
+      .leftJoin('players', 'player_stats.player_name', 'players.name')
       .orderBy('player_stats.Total_Assist', 'desc')
       .limit(5);
 
@@ -89,6 +95,7 @@ app.get('/api/top-assists', async (req, res) => {
   }
 });
 
+// Get top CS (Creep Score) with player's photo and team
 app.get('/api/top-cs', async (req, res) => {
   try {
     const topCS = await db
@@ -97,16 +104,24 @@ app.get('/api/top-cs', async (req, res) => {
         'player_stats.drafter_name',
         'player_stats.video_id',
         'player_stats.Total_CS',
+        'players.photo',
+        'players.team',
         'draft_info.url'
       )
       .from('player_stats')
       .leftJoin('draft_info', 'player_stats.video_id', 'draft_info.video_id')
+      .leftJoin('players', 'player_stats.player_name', 'players.name')
       .whereNotNull('player_stats.Total_CS')
       .orderBy('player_stats.Total_CS', 'desc')
       .limit(5);
 
     const formattedTopCS = topCS.map(player => ({
-      ...player,
+      player_name: player.player_name,
+      drafter_name: player.drafter_name,
+      video_id: player.video_id,
+      Total_CS: player.Total_CS,
+      photo: player.photo,
+      team: player.team,
       url: player.url || 'https://www.youtube.com/watch?v=GaE-L5zP-DE',
     }));
 
@@ -117,6 +132,8 @@ app.get('/api/top-cs', async (req, res) => {
   }
 });
 
+
+// Get top performance (based on total goals and assists)
 app.get('/api/top-performance', async (req, res) => {
   try {
     const topPerformance = await db.select(
@@ -125,10 +142,13 @@ app.get('/api/top-performance', async (req, res) => {
         'player_stats.video_id',
         'player_stats.Total_Goal',
         'player_stats.Total_Assist',
+        'players.photo',
+        'players.team',
         'draft_info.url'
       )
       .from('player_stats')
       .leftJoin('draft_info', 'player_stats.video_id', 'draft_info.video_id')
+      .leftJoin('players', 'player_stats.player_name', 'players.name')
       .whereNotNull('Total_Goal')
       .whereNotNull('Total_Assist')
       .orderBy(db.raw('(Total_Goal + Total_Assist)'), 'desc')
@@ -141,6 +161,143 @@ app.get('/api/top-performance', async (req, res) => {
   }
 });
 
+// Get top players onur
+app.get('/api/top-players-onur', async (req, res) => {
+  try {
+    const topPlayers = await db
+      .select(
+        'player_stats.player_name',
+        'player_stats.drafter_name',
+        'players.photo',
+        'players.team'
+      )
+      .sum({ 'Total_Points': 'player_stats.Goal_King' })
+      .sum({ 'Total_Points': 'player_stats.Assist_King' })
+      .sum({ 'Total_Points': 'player_stats.CS_King' })
+      .sum({ 'Total_Points': 'player_stats.EU_Goal_King' })
+      .sum({ 'Total_Points': 'player_stats.EU_Assist_King' })
+      .sum({ 'Total_Points': 'player_stats.EU_CS_King' })
+      .sum({ 'Total_Points': 'player_stats.3RB_Goal_King' })
+      .sum({ 'Total_Points': 'player_stats.3RB_Assist_King' })
+      .sum({ 'Total_Points': 'player_stats.3RB_CS_King' })
+      .sum({ 'Total_Points': 'player_stats.Best_Performance' })
+      .sum({ 'Total_Points': 'player_stats.Best_Best_Performance' })
+      .sum({ 'Total_Points': 'player_stats.Performance_king' })
+      .sum({ 'Total_Points': 'player_stats.Other_Point' })
+      .from('player_stats')
+      .leftJoin('players', 'player_stats.player_name', 'players.name')
+      .where('player_stats.drafter_name', '=', 'Onur')
+      .groupBy('player_stats.player_name', 'player_stats.drafter_name', 'players.photo', 'players.team')
+      .orderBy('Total_Points', 'desc')
+      .limit(5);
+
+    const formattedTopPlayers = topPlayers.map(player => ({
+      player_name: player.player_name,
+      drafter_name: player.drafter_name,
+      photo: player.photo,
+      team: player.team,
+      Total_Points: player.Total_Points,
+    }));
+
+    res.json(formattedTopPlayers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// Get top players arden
+app.get('/api/top-players-arden', async (req, res) => {
+  try {
+    const topPlayersArden = await db
+      .select(
+        'player_stats.player_name',
+        'player_stats.drafter_name',
+        'players.photo',
+        'players.team'
+      )
+      .sum({ 'Total_Points': 'player_stats.Goal_King' })
+      .sum({ 'Total_Points': 'player_stats.Assist_King' })
+      .sum({ 'Total_Points': 'player_stats.CS_King' })
+      .sum({ 'Total_Points': 'player_stats.EU_Goal_King' })
+      .sum({ 'Total_Points': 'player_stats.EU_Assist_King' })
+      .sum({ 'Total_Points': 'player_stats.EU_CS_King' })
+      .sum({ 'Total_Points': 'player_stats.3RB_Goal_King' })
+      .sum({ 'Total_Points': 'player_stats.3RB_Assist_King' })
+      .sum({ 'Total_Points': 'player_stats.3RB_CS_King' })
+      .sum({ 'Total_Points': 'player_stats.Best_Performance' })
+      .sum({ 'Total_Points': 'player_stats.Best_Best_Performance' })
+      .sum({ 'Total_Points': 'player_stats.Performance_king' })
+      .sum({ 'Total_Points': 'player_stats.Other_Point' })
+      .from('player_stats')
+      .leftJoin('players', 'player_stats.player_name', 'players.name')
+      .where('player_stats.drafter_name', '=', 'Arden')
+      .groupBy('player_stats.player_name', 'player_stats.drafter_name', 'players.photo', 'players.team')
+      .orderBy('Total_Points', 'desc')
+      .limit(5);
+
+    const formattedTopPlayersArden = topPlayersArden.map(player => ({
+      player_name: player.player_name,
+      drafter_name: player.drafter_name,
+      photo: player.photo,
+      team: player.team,
+      Total_Points: player.Total_Points,
+    }));
+
+    res.json(formattedTopPlayersArden);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get top players ugur
+app.get('/api/top-players-ugur', async (req, res) => {
+  try {
+    const topPlayersArden = await db
+      .select(
+        'player_stats.player_name',
+        'player_stats.drafter_name',
+        'players.photo',
+        'players.team'
+      )
+      .sum({ 'Total_Points': 'player_stats.Goal_King' })
+      .sum({ 'Total_Points': 'player_stats.Assist_King' })
+      .sum({ 'Total_Points': 'player_stats.CS_King' })
+      .sum({ 'Total_Points': 'player_stats.EU_Goal_King' })
+      .sum({ 'Total_Points': 'player_stats.EU_Assist_King' })
+      .sum({ 'Total_Points': 'player_stats.EU_CS_King' })
+      .sum({ 'Total_Points': 'player_stats.3RB_Goal_King' })
+      .sum({ 'Total_Points': 'player_stats.3RB_Assist_King' })
+      .sum({ 'Total_Points': 'player_stats.3RB_CS_King' })
+      .sum({ 'Total_Points': 'player_stats.Best_Performance' })
+      .sum({ 'Total_Points': 'player_stats.Best_Best_Performance' })
+      .sum({ 'Total_Points': 'player_stats.Performance_king' })
+      .sum({ 'Total_Points': 'player_stats.Other_Point' })
+      .from('player_stats')
+      .leftJoin('players', 'player_stats.player_name', 'players.name')
+      .where('player_stats.drafter_name', '=', 'Ugur')
+      .groupBy('player_stats.player_name', 'player_stats.drafter_name', 'players.photo', 'players.team')
+      .orderBy('Total_Points', 'desc')
+      .limit(5);
+
+    const formattedTopPlayersArden = topPlayersArden.map(player => ({
+      player_name: player.player_name,
+      drafter_name: player.drafter_name,
+      Total_Points: player.Total_Points,
+      photo: player.photo,
+      team: player.team,
+    }));
+
+    res.json(formattedTopPlayersArden);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get player names
 app.get('/player-names', async (req, res) => {
   try {
     const playerNames = await db.select('name').from('players');
@@ -151,6 +308,7 @@ app.get('/player-names', async (req, res) => {
   }
 });
 
+// Get team names
 app.get('/team-names', async (req, res) => {
   try {
     const teamNames = await db.distinct('team').from('players');
@@ -161,6 +319,7 @@ app.get('/team-names', async (req, res) => {
   }
 });
 
+// Get positions
 app.get('/positions', async (req, res) => {
   try {
     const positions = await db.distinct('position').from('players');
@@ -171,12 +330,12 @@ app.get('/positions', async (req, res) => {
   }
 });
 
+// Add a player
 app.post('/api/add-players', async (req, res) => {
   try {
     const { name, position, team } = req.body;
 
     await db('players').insert({ name, position, team });
-    console.log(name, position, team);
     res.status(201).json({ message: 'Player added successfully' });
   } catch (error) {
     console.error(error);
@@ -184,36 +343,21 @@ app.post('/api/add-players', async (req, res) => {
   }
 });
 
+// Delete a player
 app.delete('/api/delete-player', (req, res) => {
-  try {
-      const { name, team, position } = req.body;
-
-      // Find the player in the array based on unique properties
-      const playerIndex = playersData.findIndex(player =>
-          player.name === name && player.team === team && player.position === position
-      );
-
-      if (playerIndex !== -1) {
-          // Remove the player from the array
-          playersData.splice(playerIndex, 1);
-
-          // Send a success response
-          res.json({ success: true, message: 'Player deleted successfully' });
-      } else {
-          // Player not found, send an error response
-          res.status(404).json({ success: false, message: 'Player not found' });
-      }
-  } catch (error) {
-      // Log the error for debugging purposes
-      console.error('Error in delete-player route:', error);
-
-      // Send an internal server error response
-      res.status(500).json({ success: false, message: 'Internal Server Error' });
-  }
+  const { name, position, team } = req.query;
+  db('players')
+    .where({ name, position, team })
+    .del()
+    .then(() => res.status(204).json({ message: 'Player deleted successfully' }))
+    .catch(error => {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    });
 });
 
 app.listen(PORT, () => {
   console.log(`You are launching the server`);
   console.log(`Server is running on http://localhost:${PORT}`);
-  console.log(`In case of any modification, please restart the server Ctrl + C and run again npm run dev`)
+  console.log(`In case of any modification, please restart the server Ctrl + C and run again npm run dev`);
 });

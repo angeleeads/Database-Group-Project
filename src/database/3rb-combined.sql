@@ -79,7 +79,7 @@ CREATE TABLE `players` (
   `name` varchar(100) NOT NULL,
   `team` varchar(100) NOT NULL,
   `position` varchar(3) default null,
-  PRIMARY KEY (`name`),
+  PRIMARY KEY (`name`,`team`),
   KEY `FK_team_idx` (`team`),
   CONSTRAINT `FK_team` FOREIGN KEY (`team`) REFERENCES `teams` (`name`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -89,12 +89,12 @@ INSERT INTO `players` VALUES ("Salih Özcan","BVB","MF");
 INSERT INTO `players` VALUES ('Marco Reus',"BVB","MF");
 INSERT INTO `players` VALUES ('Zeki Çelik',"Roma","RB");
 INSERT INTO `players` VALUES ('Joel Matip',"Liverpool","STP");
-INSERT INTO `players` VALUES ('Ante Rebic',"Beşiktaş","SNT");
+INSERT INTO `players` VALUES ('Ante Rebic',"Beşiktaş","ST");
 INSERT INTO `players` VALUES ('Milot Rashica',"Beşiktaş","RW");
 INSERT INTO `players` VALUES ('Gedson Fernandes',"Beşiktaş","MF");
 INSERT INTO `players` VALUES ('Eric Bailly',"Beşiktaş","STP");
 INSERT INTO `players` VALUES ('İlkay Gündoğan',"Barcelona","MF");
-INSERT INTO `players` VALUES ('Joshua King',"Fenerbahçe","SNT");
+INSERT INTO `players` VALUES ('Joshua King',"Fenerbahçe","ST");
 INSERT INTO `players` VALUES ('Karim Benzema',"Al-Ittihad","ST");
 INSERT INTO `players` VALUES ('Emre Can',"BVB","MF");
 INSERT INTO `players` VALUES ('Stefan de Vrij',"Inter","STP");
@@ -176,7 +176,7 @@ INSERT INTO `players` VALUES ('Marvelous Nakamba',"Luton Town","DMF");
 INSERT INTO `players` VALUES ('Jose Sa',"Wolves","GK");
 INSERT INTO `players` VALUES ('Pierre-Emile Hojbjerg',"Tottenham","DMF");
 INSERT INTO `players` VALUES ('Emiliano Martinez',"Aston Villa","GK");
-INSERT INTO `players` VALUES ('Darwin Nunez',"Liverpool","SNT");
+INSERT INTO `players` VALUES ('Darwin Nunez',"Liverpool","ST");
 INSERT INTO `players` VALUES ('Albert Sambi Lokonga',"Luton Town","MF");
 INSERT INTO `players` VALUES ('Ansu Fati',"Brighton","LW");
 INSERT INTO `players` VALUES ('Thomas Strakosha',"Brentford","GK");
@@ -184,7 +184,7 @@ INSERT INTO `players` VALUES ('Vini Souza',"Sheffield United","DMF");
 INSERT INTO `players` VALUES ('Sven Botman',"Newcastle","STP");
 INSERT INTO `players` VALUES ('Enzo Fernandez',"Chelsea","MF");
 INSERT INTO `players` VALUES ('Mikkel Damsgaard',"Brentford","LW");
-INSERT INTO `players` VALUES ('Cameron Archer',"Sheffield United","SNT");
+INSERT INTO `players` VALUES ('Cameron Archer',"Sheffield United","ST");
 INSERT INTO `players` VALUES ('Josh Cullen',"Burnley","MF");
 INSERT INTO `players` VALUES ('Thomas Kaminski',"Luton Town","GK");
 INSERT INTO `players` VALUES ('Beto',"Everton","GK");
@@ -198,12 +198,13 @@ INSERT INTO `players` VALUES ('Ryan Fraser',"Southampton","LW");
 
 CREATE TABLE `drafters` (
   `name` varchar(50) NOT NULL,
+  `channel_url` varchar(100) default NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-INSERT INTO `drafters` VALUES ('Onur');
-INSERT INTO `drafters` VALUES ('Ugur');
-INSERT INTO `drafters` VALUES ("Arden");
-INSERT INTO `drafters` VALUES ("Other");
+INSERT INTO `drafters` VALUES ('Onur',"https://www.youtube.com/@OnurOnline");
+INSERT INTO `drafters` VALUES ('Ugur', "https://www.youtube.com/@UKarakullukcu");
+INSERT INTO `drafters` VALUES ("Arden", "https://www.youtube.com/@ardenpapazyan");
+INSERT INTO `drafters` VALUES ("Other", default);
 
 
 
@@ -552,8 +553,8 @@ INSERT INTO `teams` VALUES ('Girona','LaLiga');
 INSERT INTO `teams` VALUES ('Villarreal','LaLiga');
 INSERT INTO `teams` VALUES ("KAA Gent",'Jupiler Pro League');
 
-INSERT INTO `players` VALUES ('Khvicha Kvaratskhelia',"Napoli","LW");
-INSERT INTO `players` VALUES ('Randal Kolo Muani',"Paris","SNT");
+INSERT INTO `players` VALUES ("Khvicha Kvaratskhelia","Napoli","LW");
+INSERT INTO `players` VALUES ('Randal Kolo Muani',"Paris","ST");
 INSERT INTO `players` VALUES ('Gregor Kobel',"Dortmund","GK");
 INSERT INTO `players` VALUES ('Eder Militao',"Real Madrid","STP");
 INSERT INTO `players` VALUES ('Noussair Mazraoui',"Bayern","RB");
@@ -576,7 +577,7 @@ INSERT INTO `players` VALUES ('Alessandro Bastoni',"Inter","STP");
 INSERT INTO `players` VALUES ('Luke Shaw',"MUN","LB");
 INSERT INTO `players` VALUES ('Lois Openda',"RB Leipzig","ST");
 INSERT INTO `players` VALUES ('Viktor Tsygankov',"Girona","RW");
-INSERT INTO `players` VALUES ('Evan Ferguson',"Brighton","SNT");
+INSERT INTO `players` VALUES ('Evan Ferguson',"Brighton","ST");
 INSERT INTO `players` VALUES ('Giorgio Scalvini',"Atalanta","MF");
 
 INSERT INTO `players` VALUES ('Min-jae Kim',"Bayern","STP");
@@ -667,9 +668,9 @@ INSERT  INTO `players` VALUES ('Lautaro Martinez', "Inter", "ST");
 INSERT  INTO `players` VALUES ('Khephren Thuram', "OGC Nizza", "MF");
 INSERT  INTO `players` VALUES ('Goncalo Ramos', "Paris", "ST");
 INSERT  INTO `players` VALUES ('Pedri', "Barcelona", "MF");
-INSERT  INTO `players` VALUES ('Karim Adeyemi', "Dortmund", "SNT");
+INSERT  INTO `players` VALUES ('Karim Adeyemi', "Dortmund", "ST");
 INSERT  INTO `players` VALUES ('Nicolas Dominguez', "Nottingham Forest", "MF");
-INSERT  INTO `players` VALUES ('Folarin Balogun', "Monaco", "SNT");
+INSERT  INTO `players` VALUES ('Folarin Balogun', "Monaco", "ST");
 INSERT  INTO `players` VALUES ('Noni Madueke', "Chelsea", "RW");
 INSERT  INTO `players` VALUES ('Wilfried Singo', "Monaco", "RB");
 INSERT  INTO `players` VALUES ('Jules Kounde', "Barcelona", "STP");
@@ -944,9 +945,9 @@ INSERT  INTO `players` VALUES ('Stole Dimitrievski', "Rayo Vallecano", "GK");
 INSERT  INTO `players` VALUES ('Iddrisu Baba', "Almería", "MF");
 INSERT  INTO `players` VALUES ('Jose Gaya', "Valencia", "LB");
 INSERT  INTO `players` VALUES ('Fali', "Cadiz", "STP");
-INSERT  INTO `players` VALUES ('Vedat Muriqi', "Mallorca", "SNT");
+INSERT  INTO `players` VALUES ('Vedat Muriqi', "Mallorca", "ST");
 INSERT  INTO `players` VALUES ('Nabil Fekir', "Real Betis", "MF");
-INSERT  INTO `players` VALUES ('Youssef En-Nesyri', "Sevilla", "SNT");
+INSERT  INTO `players` VALUES ('Youssef En-Nesyri', "Sevilla", "ST");
 INSERT  INTO `players` VALUES ('Alejandro Catena', "Osasuna", "STP");
 INSERT  INTO `players` VALUES ('Mauro Arambarri ', "Getafe", "MF");
 INSERT  INTO `players` VALUES ('Dani Parejo', "Villarreal", "MF");
@@ -1061,7 +1062,7 @@ UPDATE `player_stats` SET  `3RB_CS_king` = 50
 WHERE (`player_name` = "Alex Remiro" AND `drafter_name` = "Onur" AND `video_id` = 6);
 
 
-INSERT INTO `players` VALUES ('Robert Lewandowski', "Barcelona", "SNT");
+INSERT INTO `players` VALUES ('Robert Lewandowski', "Barcelona", "ST");
 INSERT INTO `players` VALUES ('Jan Oblak', "Atletico Madrid", "GK");
 INSERT INTO `players` VALUES ('Sergi Darder', "Mallorca", "MF");
 INSERT INTO `players` VALUES ('Guido Rodriguez', "Real Betis", "MF");
@@ -1720,3 +1721,26 @@ WHERE (`player_name` = "Heung-min Son" AND `drafter_name` = "Onur" AND `video_id
 
 UPDATE `player_stats` SET  `Best_Performance` = 43 
 WHERE (`player_name` = "Harry Kane" AND `drafter_name` = "Onur" AND `video_id` = 9);
+
+
+
+ALTER TABLE `players`
+ADD COLUMN `photo` VARCHAR(255) DEFAULT "https://t4.ftcdn.net/jpg/02/08/98/05/360_F_208980504_njS12KTuZLQ3wQZaHLbKpSLFNu9rF6Hs.jpg";
+
+-- Step 1: Add the 'team' column
+ALTER TABLE `player_stats`
+ADD COLUMN `team` VARCHAR(100);
+
+-- Step 2: Update the 'team' column from the 'players' table
+UPDATE `player_stats` ps
+JOIN `players` p ON ps.player_name = p.name
+SET ps.team = p.team;
+
+-- Step 3: Drop the current primary key
+ALTER TABLE `player_stats`
+DROP PRIMARY KEY;
+
+-- Step 4: Add the new composite primary key
+ALTER TABLE `player_stats`
+ADD PRIMARY KEY (`player_name`, `team`, `video_id`, `drafter_name`);
+
