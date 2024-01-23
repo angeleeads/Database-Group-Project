@@ -23,17 +23,6 @@ app.get('/api/players-data', async (req, res) => {
   }
 });
 
-// Get all leagues data
-app.get('/api/data', async (req, res) => {
-  try {
-    const data = await db.select('*').from('leagues');
-    res.json(data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 // Get top scorers
 app.get('/api/top-scorers', async (req, res) => {
   try {

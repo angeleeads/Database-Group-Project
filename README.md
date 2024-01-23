@@ -32,6 +32,12 @@ The project uses Knex.js for database migrations. Ensure you have a MySQL databa
 ⚠️ Please make sure you have properly have the `sql_3rb` database before running the project.
 The database file is `src/database/3rb-combined.sql` and you can import it to your database.
 
+Import the `3rb-combined.sql` file to your database.:
+
+    ```mysql
+    source 'src/database/3rb-combined.sql'
+    ```
+
 ### Running the Application
 
 1. Start the server:
@@ -81,7 +87,6 @@ To add more queries to the server, you can follow these steps:
 4. Update your React components to fetch data from the new endpoint.
 
     ```javascript
-    // Example in your React component
     useEffect(() => {
       async function fetchNewData() {
          try {
@@ -94,8 +99,29 @@ To add more queries to the server, you can follow these steps:
     }, []);
     ```
 
-## Added Queries
+## Implemented Queries
+## Simple Stats Queries
 ### [ GET ] : `/api/top-scorers`
 ### [ GET ] : `/api/top-assists`
 ### [ GET ] : `/api/top-cs`
 ### [ GET ] : `/api/top-performance`
+### [ GET ] : `/api/top-players-onur`
+### [ GET ] : `/api/top-players-arden`
+### [ GET ] : `/api/top-players-ugur`
+
+## Players Queries
+### [ GET ] : `/api/players-data`
+### [ GET ] : `/api/add-players`
+### [ GET ] : `/api/delete-players`
+
+## Search Queries
+### [ GET ] : `/api/search`
+### [ GET ] : `/player-names`
+### [ GET ] : `/team-names`
+### [ GET ] : `/positions`
+
+## Complex Stats Queries
+### [ GET ] : `/api/best-players-performance`
+### [ GET ] : `/api/top-assists-players`
+### [ GET ] : `/api/team-top-scorers`
+### [ GET ] : `/api/striker-comparison`
