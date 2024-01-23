@@ -3,6 +3,9 @@ import TopScorers from '../components/SimpleStats/TopScorers';
 import TopAssists from '../components/SimpleStats/TopAssists';
 import TopCS from '../components/SimpleStats/TopCS';
 import TopPerformance from '../components/SimpleStats/TopPerformance';
+import TopPlayersOnur from '../components/SimpleStats/TopPlayersOnur';
+import TopPlayersArden from '../components/SimpleStats/TopPlayersArden';
+import TopPlayersUgur from '../components/SimpleStats/TopPlayersUgur';
 
 const SimpleStats = () => {
 
@@ -14,6 +17,9 @@ const SimpleStats = () => {
         <TopAssists />
         <TopPerformance />
         <TopCS />
+        <TopPlayersOnur />
+        <TopPlayersArden />
+        <TopPlayersUgur />
       </ul>
     </div>
   );

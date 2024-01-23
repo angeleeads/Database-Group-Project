@@ -6,6 +6,7 @@ import SimpleStats from './pages/SimpleStatsPage';
 import ComplexStats from './pages/ComplexStatsPage';
 import AddPlayer from './pages/AddPlayerPage';
 import SearchPage from './pages/SearchPage';
+import BestPlayersPerVideoId from './pages/BestPlayersPerVideoId';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/complex-stats" element={<ComplexStats />} />
         <Route path="/add-players" element={<AddPlayer />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/best-players-per-video-id" element={<BestPlayersPerVideoId />} />
       </Routes>
     </Router>
   );

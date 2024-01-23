@@ -1754,3 +1754,10 @@ UPDATE players SET photo = 'https://i.pinimg.com/originals/0c/64/57/0c64571c1f2b
 UPDATE players SET photo = 'https://i.pinimg.com/originals/46/fc/b3/46fcb38f08ab8754e529e22b3a695d59.jpg' WHERE name = 'Achraf Hakimi';
 UPDATE players SET photo = 'https://i.pinimg.com/originals/0c/cf/25/0ccf25c61cbfda8ab4664afec4ddee1e.jpg' WHERE name = 'Robert Lewandowski';
 UPDATE players SET photo = 'https://assets-fr.imgfoot.com/media/cache/1200x1200/alejandro-grimaldo-2324.jpg' WHERE name = 'Alejandro Grimaldo';
+UPDATE players SET photo = 'https://images2.gazzettaobjects.it/methode_image/2020/02/20/Calcio/Foto_Calcio_-_Trattate/1198381971-0069-kBXB--712x402@Gazzetta-Web_712x402.jpg?v=202002201437' WHERE name = 'Alex Meret';
+UPDATE players SET photo = 'https://images.bfmtv.com/j4-tDsisuMJxNaGli0lxJso_DMk=/0x60:1024x636/640x0/images/-769227.jpg' WHERE name = 'Gianluigi Donnarumma';
+UPDATE players SET photo = 'https://ajssarimg2.mediatriple.net/1694213.jpg.webp?w=750&h=422' WHERE name = 'Altay Bayındır';
+UPDATE players SET photo = 'https://static.hercegovina.info/img/repository/2023/01/image_1024x1024/1893686.jpg' WHERE name = 'Livakoviç';
+UPDATE players SET photo = 'https://icdn.psgtalk.com/wp-content/uploads/2023/10/rodrygo-sc-braga-v-real-madrid-cf-group-c-uefa-champions-league-2023-24.jpg' WHERE name = 'Rodrygo';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/0b/d7/11/0bd711cc352fe1a6c8571c268efbf9b5.jpg' WHERE name = 'Erling Haaland';
+UPDATE players SET photo = 'https://i.pinimg.com/originals/59/6d/ec/596dec901111c05b6934035207c1da53.jpg' WHERE name = 'Alisson';

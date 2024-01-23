@@ -1,16 +1,18 @@
 import React from 'react';
-import TopPlayersOnur from '../components/ComplexStats/TopPlayersOnur';
-import TopPlayersArden from '../components/ComplexStats/TopPlayersArden';
-import TopPlayersUgur from '../components/ComplexStats/TopPlayersUgur';
+import StrikerComparison from '../components/ComplexStats/StrikerComparison';
+import TopAssistPlayers from '../components/ComplexStats/TopAssistsPlayers';
+import TeamTopScorers from '../components/ComplexStats/TeamTopScorers';
+import BestPlayersPerformance from '../components/ComplexStats/BestPlayersPerformance';
 
 const ComplexStats = () => {
   return (
     <div>
       <h2 className="text-3xl font-bold text-gray-900 text-center mb-9">List of Complex Stats</h2>
       <ul>
-        <TopPlayersOnur />
-        <TopPlayersArden />
-        <TopPlayersUgur />
+        <StrikerComparison />
+        <TopAssistPlayers />
+        <BestPlayersPerformance />
+        <TeamTopScorers />
       </ul>
     </div>
   );

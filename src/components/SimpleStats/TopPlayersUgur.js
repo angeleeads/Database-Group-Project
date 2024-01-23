@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const TopPlayersOnur = () => {
+const TopPlayersUgur = () => {
   const [topPlayers, setTopPlayers] = useState([]);
   const [showCards, setShowCards] = useState(true);
 
   useEffect(() => {
     async function fetchTopPlayers() {
       try {
-        const response = await axios.get('http://localhost:3001/api/top-players-onur');
+        const response = await axios.get('http://localhost:3001/api/top-players-ugur');
         setTopPlayers(response.data);
       } catch (error) {
         console.error(error);
@@ -22,10 +22,11 @@ const TopPlayersOnur = () => {
     setShowCards(!showCards);
   };
 
+
   return (
     <div className="mb-8">
-      <h2 className="text-3xl font-bold mb-4 flex items-center text-gray-800" onClick={toggleCards}>
-      Onur's Top 5 Players
+      <h2 className="text-3xl font-bold mb-4 flex items-center text-gray-300" onClick={toggleCards}>
+      Ugur's Top 5 Players
       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
         <path fillRule="evenodd" d="M10 14.586L3.707 8.293a1 1 0 011.414-1.414L10 11.586l4.879-4.879a1 1 0 111.414 1.414L10 14.586z" clipRule="evenodd" />
       </svg>
@@ -52,4 +53,4 @@ const TopPlayersOnur = () => {
   );
 };
 
-export default TopPlayersOnur;
+export default TopPlayersUgur;

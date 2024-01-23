@@ -104,10 +104,13 @@ app.get('/api/top-cs', async (req, res) => {
         'ps.player_name',
         'ps.drafter_name',
         'ps.video_id',
+        'players.photo',
+        'players.team',
         'ps.Total_CS'
       )
       .from('player_stats as ps')
       .join('players as p', 'ps.player_name', 'p.name')
+      .leftJoin('players', 'ps.player_name', 'players.name')
       .where('p.position', 'GK')
       .whereNotNull('ps.Total_CS')
       .orderBy('ps.Total_CS', 'desc')
@@ -308,10 +311,64 @@ app.get('/api/search', async (req, res) => {
           res.status(400).json({ error: 'Invalid video_id' });
           return;
         }
-        query = await db
-          .select('*')
-          .from('player_stats')
-          .where('video_id', '=', videoId);
+        query = await db.with('PlayerPerformance', (qb) => {
+          qb.select(
+            'ps.player_name',
+            'ps.drafter_name',
+            'ps.video_id',
+            'p.position',
+            db.raw(`
+              CASE
+                WHEN p.position IN ('SNT', 'ST') THEN (ps.Total_Goal + ps.Total_Assist) / ps.Total_Match
+                WHEN p.position = 'LW' THEN (ps.Total_Goal + ps.Total_Assist) / ps.Total_Match
+                WHEN p.position = 'RW' THEN (ps.Total_Goal + ps.Total_Assist) / ps.Total_Match
+                WHEN p.position = 'MF' THEN (ps.Total_Goal + ps.Total_Assist) / ps.Total_Match
+                WHEN p.position = 'DMF' THEN (ps.Total_Goal + ps.Total_Assist) / ps.Total_Match
+                WHEN p.position IN ('LB', 'RB') THEN (ps.Total_CS + ps.Total_Assist) / ps.Total_Match
+                WHEN p.position = 'GK' THEN ps.Total_CS / ps.Total_Match
+                WHEN p.position = 'STP' THEN ps.Total_CS / ps.Total_Match
+              END AS PerformanceScore
+            `),
+            db.raw(`
+              ROW_NUMBER() OVER (PARTITION BY p.position ORDER BY (ps.Total_Goal + ps.Total_Assist) DESC) AS PositionRank
+            `)
+          )
+          .from('player_stats AS ps')
+          .join('players AS p', 'ps.player_name', 'p.name')
+          .where('ps.video_id', '=', videoId)
+          .andWhere('ps.Total_Match', '>', 20);
+        })
+        .with('RankedPlayers', (qb) => {
+          qb.select('player_name', 'drafter_name', 'video_id', 'position')
+          .from('PlayerPerformance')
+          .where((builder) => {
+            builder
+              .where((builder) => {
+                builder.whereIn('position', ['SNT', 'ST']).andWhere('PositionRank', '=', 1)
+              })
+              .orWhere((builder) => {
+                builder.whereIn('position', ['LW', 'RW']).andWhere('PositionRank', '=', 1)
+              })
+              .orWhere((builder) => {
+                builder.whereIn('position', ['MF', 'DMF']).andWhere('PositionRank', '<=', 2)
+              })
+              .orWhere((builder) => {
+                builder.where('position', '=', 'DOS').andWhere('PositionRank', '=', 1)
+              })
+              .orWhere((builder) => {
+                builder.whereIn('position', ['LB', 'RB']).andWhere('PositionRank', '=', 1)
+              })
+              .orWhere((builder) => {
+                builder.where('position', '=', 'GK').andWhere('PositionRank', '=', 1)
+              })
+              .orWhere((builder) => {
+                builder.where('position', '=', 'STP').andWhere('PositionRank', '<=', 2)
+              });
+          });
+        })
+        .select('player_name', 'drafter_name', 'video_id', 'position')
+        .from('RankedPlayers');
+
         break;
       case 'drafter_name':
         const drafterExists = await db
@@ -328,11 +385,10 @@ app.get('/api/search', async (req, res) => {
           .from('player_stats')
           .where('drafter_name', '=', value);
         break;
-      default:
-        res.status(400).json({ error: 'Invalid search type' });
-        return;
-    }
-
+          default:
+            res.status(400).json({ error: 'Invalid search type' });
+            return;
+        }
     res.json(query);
   } catch (error) {
     console.error(error);
@@ -398,6 +454,200 @@ app.delete('/api/delete-player', (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     });
 });
+
+// Bera: Top 5 Players by Combined Performance Score
+app.get('/api/best-players-performance', async (req, res) => {
+  try {
+    const results = await db.raw(`
+      WITH PlayerPerformance AS (
+        SELECT
+            ps.player_name,
+            players.photo,
+            players.team,
+            AVG(ps.Total_Assist / ps.Total_Match) AS avg_assists_per_match,
+            AVG(ps.Total_Goal / ps.Total_Match) AS avg_goals_per_match,
+            ROW_NUMBER() OVER (ORDER BY (AVG(ps.Total_Assist / ps.Total_Match) + AVG(ps.Total_Goal / ps.Total_Match)) DESC) AS row_num
+        FROM
+            player_stats ps
+            LEFT JOIN players ON ps.player_name = players.name
+        WHERE
+            ps.player_name NOT IN (SELECT player_name FROM player_stats WHERE Assist_King > 0)
+            AND ps.player_name NOT IN (SELECT player_name FROM player_stats WHERE Goal_King > 0)
+            AND             ps.Total_Match > 10
+        GROUP BY
+            ps.player_name, players.photo, players.team
+      )
+      SELECT
+          player_name,
+          photo,
+          team,
+          (avg_assists_per_match + avg_goals_per_match) AS total_score
+      FROM
+          PlayerPerformance
+      WHERE
+          row_num <= 5 
+      ORDER BY
+          total_score DESC;
+    `);
+    res.json(results[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Sedef: Champions League Triumph: Leading Assist Provider's Position (check)
+app.get('/api/top-assists-players', async (req, res) => {
+  try {
+    const results = await db.raw(`
+    WITH ChampionshipTeams AS (
+      SELECT
+        video_id,
+        video_winner AS team_name
+      FROM
+        draft_result
+      WHERE
+        Ugur_ŞL = 'ŞL Şampiyon' OR Arden_ŞL = 'ŞL Şampiyon' OR Onur_ŞL = 'ŞL Şampiyon'
+    ),
+    TopAssistPlayers AS (
+      SELECT
+        ps.video_id,
+        ps.drafter_name,
+        ps.player_name,
+        p.position,
+        p.photo,
+        RANK() OVER (PARTITION BY ps.video_id, ps.drafter_name ORDER BY ps.Total_Assist DESC) AS AssistRank
+      FROM
+        player_stats ps
+      JOIN
+        players p ON ps.player_name = p.name
+      WHERE
+        ps.Total_Assist IS NOT NULL
+    )
+    SELECT
+      t.video_id,
+      t.drafter_name,
+      t.player_name,
+      t.position,
+      t.photo,
+      t.AssistRank
+    FROM
+      TopAssistPlayers t
+    JOIN
+      ChampionshipTeams c ON t.video_id = c.video_id AND t.drafter_name = c.team_name
+    WHERE
+      t.AssistRank = 1;
+    `);
+    res.json(results[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Sedef: Non-SNT Top Scorers: Unconventional Team Success (check)
+app.get('/api/team-top-scorers', async (req, res) => {
+  try {
+    const results = await db.raw(`
+      WITH TeamTopScorers AS (
+        SELECT
+          t.name AS team_name,
+          ps.player_name,
+          ps.Total_Goal,
+          p.photo -- Assuming 'photo' is the column for player photos
+        FROM
+          teams t
+        JOIN
+          players p ON t.name = p.team
+        JOIN
+          player_stats ps ON p.name = ps.player_name
+        WHERE
+          p.position NOT IN ('SNT', 'ST') AND ps.Total_Goal IS NOT NULL
+        ORDER BY
+          t.name, ps.Total_Goal DESC
+      )
+      , RankedTeamTopScorers AS (
+        SELECT
+          team_name,
+          player_name AS top_scorer,
+          Total_Goal,
+          photo,
+          ROW_NUMBER() OVER (PARTITION BY team_name ORDER BY Total_Goal DESC) AS ScorerRank
+        FROM
+          TeamTopScorers
+      )
+      SELECT
+        team_name,
+        top_scorer,
+        Total_Goal,
+        photo
+      FROM
+        RankedTeamTopScorers
+      WHERE
+        ScorerRank = 1
+      ORDER BY
+        Total_Goal DESC
+      LIMIT 5;
+    `);
+    res.json(results[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Bera: Goal Scoring Disparity: SNT vs. STP Players (check)
+app.get('/api/striker-comparison', async (req, res) => {
+  try {
+      const results = await db.raw(`
+          WITH StrikerComparison AS (
+              SELECT
+                  st.player_name AS st_player,
+                  st.drafter_name AS st_drafter,
+                  st.Total_Goal AS st_goals,
+                  st.Total_Match AS st_matches,
+                  stp.player_name AS stp_player,
+                  stp.drafter_name AS stp_drafter,
+                  stp.Total_Goal AS stp_goals,
+                  stp.Total_Match AS stp_matches,
+                  players.photo AS photo,
+                  players.team AS team
+              FROM
+                  player_stats st
+              JOIN
+                player_stats stp
+                ON st.team = stp.team
+                AND st.player_name != stp.player_name
+                AND stp.player_name IN (SELECT name FROM players WHERE position IN ('MF'))
+                AND st.Total_Goal/st.Total_Match < stp.Total_Goal/stp.Total_Match
+              JOIN
+                  players ON st.player_name = players.name
+              WHERE
+                  players.position = 'ST'
+          )
+          
+          SELECT
+              st_player,
+              st_drafter,
+              st_goals,
+              st_matches,
+              stp_player,
+              stp_drafter,
+              stp_goals,
+              stp_matches,
+              photo,
+              team
+          FROM
+              StrikerComparison;
+      `);
+
+      res.json(results[0]);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`You are launching the server`);

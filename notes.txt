@@ -1,3 +1,0 @@
-- SimpleStats: handle the CS with Sedef
-- ComplexSats: Add the total point for each player and modify the query to make it work (Assign Total_Points)
-- PlayersPage: when adding new player, add ability to add a photo

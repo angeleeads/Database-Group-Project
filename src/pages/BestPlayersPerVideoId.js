@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const SearchPage = () => {
+const BestPlayersPerVideoId = () => {
     const [searchType, setSearchType] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const [searchResult, setSearchResult] = useState([]);
@@ -17,7 +17,7 @@ const SearchPage = () => {
                     return;
                 }
             }
-            const response = await axios.get('http://localhost:3001/api/search', {
+            const response = await axios.get('http://localhost:3001/api/best-players-per-video-id', {
                 params: { type: searchType, value: searchValue },
             });
             setSearchResult(response.data);
@@ -35,10 +35,7 @@ const SearchPage = () => {
                 <select
                     className="border p-2 rounded-md bg-slate-300"
                     onChange={(e) => setSearchType(e.target.value)}>
-                    <option value="player_name">Player Name</option>
-                    <option value="video_id">Best Team In Video</option>
-                    <option value="drafter_name">Drafter Name</option>
-                    <option value="team">Team</option>
+                    <option value="video_id">Video ID</option>
                 </select>
                 <input
                     type="text"
@@ -89,4 +86,4 @@ const SearchPage = () => {
     );
 };
 
-export default SearchPage;
+export default BestPlayersPerVideoId;

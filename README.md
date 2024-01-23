@@ -89,6 +89,10 @@ To add more queries to the server, you can follow these steps:
             setNewData(response.data);
          } catch (error) {
             console.error(error);
+         }
+      }
+    }, []);
+    ```
 
 ## Added Queries
 ### [ GET ] : `/api/top-scorers`
