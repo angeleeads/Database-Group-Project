@@ -625,7 +625,6 @@ app.get('/api/striker-comparison', async (req, res) => {
               WHERE
                   players.position = 'ST'
           )
-          
           SELECT
               st_player,
               st_drafter,

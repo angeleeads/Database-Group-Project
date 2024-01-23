@@ -42,7 +42,7 @@ const StrikerComparison = () => {
               <div className="text-center">
                 <p className="text-xl font-semibold">ST: {player.st_player}</p>
                 <p className="text-gray-600">Team: {player.team}</p>
-                <p className="text-gray-600">MF: {player.st_player}</p>
+                <p className="text-gray-600">MF: {player.stp_player}</p>
               </div>
             </div>
           ))}
